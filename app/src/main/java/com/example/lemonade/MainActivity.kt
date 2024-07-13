@@ -1,5 +1,6 @@
 package com.example.lemonade
 
+import kotlin.random.Random
 import androidx.compose.foundation.clickable
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -106,6 +107,9 @@ fun LemonadeWithTextAndImage(modifier:Modifier=Modifier)
         else->stringResource(R.string.lemonade_restart_description)
     }
 
+    var tabNeeded by remember {mutableStateOf(0)}
+    var currentTaps by remember {mutableStateOf(0)}
+
     Column(
         modifier=Modifier
             .fillMaxSize(),
@@ -113,14 +117,29 @@ fun LemonadeWithTextAndImage(modifier:Modifier=Modifier)
         horizontalAlignment=Alignment.CenterHorizontally
     ){
         Box(
+
             modifier=Modifier
                 .background(Color(0xffbffeb7), shape= RoundedCornerShape(16.dp))
                 .height(200.dp)
                 .width(200.dp)
                 .fillMaxWidth(fraction=0.5f)
+                .border()
                 .align(Alignment.CenterHorizontally)
 
-            .clickable {result = if(result<4) result+1 else 1},
+            .clickable {
+
+                    if (result==2) {
+                        if (tabNeeded == 0) {
+                            tabNeeded = Random.nextInt(2, 5)
+                        }
+                        currentTaps++
+                        if (currentTaps >= tabNeeded) {
+                            result = 3
+                            currentTaps = 0
+                            tabNeeded = 0
+                        }
+                    }else {result= if(result<4) result + 1 else 1}
+                       },
         contentAlignment = Alignment.Center
         ){
             Image(
